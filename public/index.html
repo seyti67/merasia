@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="tools.js"></script>
+</head>
+<body>
+	<div id="info">
+		Hello!
+	</div>
+	<a id="login" style="display: none;" href="https://discord.com/api/oauth2/authorize?client_id=738322654385406003&redirect_uri=http%3A%2F%2F127.0.0.1%2Fauth%2Flogin&response_type=code&scope=identify">
+		Identify Yourself
+	</a>
+	<script>
+		window.onload = () => {
+			const cookies = readCookies();
+			
+			if (!cookies.token) {
+				const randomString = generateRandomString(21);
+				writeCookie('oauthState', randomString);
+
+				document.getElementById('login').href += `&state=${btoa(randomString)}`;
+				return document.getElementById('login').style.display = 'block';
+			}
+		};
+	</script>
+</body>
+</html>

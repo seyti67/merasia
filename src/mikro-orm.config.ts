@@ -4,10 +4,7 @@ import { join } from 'path';
 
 const config: Options = {
 	type: 'postgresql',
-	host: 'localhost',
-	port: 5432,
-	user: 'postgres',
-	password: process.env.POSTGRES_PASSWORD,
+	clientUrl: process.env.DATABASE_URL,
 	dbName: 'aperta',
 	entities: ['dist/**/*.entity.js'],
 	entitiesTs: ['src/**/*.entity.ts'],

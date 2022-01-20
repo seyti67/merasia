@@ -51,12 +51,6 @@ export class FightService {
 					monster.name.replace(' ', '_') +
 					'.png',
 			);
-		console.log(
-			process.env.URL +
-				'assets/monsters/' +
-				monster.name.replace(' ', '_') +
-				'.png',
-		);
 		return embed;
 	}
 

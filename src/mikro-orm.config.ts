@@ -5,7 +5,6 @@ import { join } from 'path';
 const config: Options = {
 	type: 'postgresql',
 	clientUrl: process.env.DATABASE_URL,
-	dbName: 'aperta',
 	entities: ['dist/**/*.entity.js'],
 	entitiesTs: ['src/**/*.entity.ts'],
 	metadataProvider: TsMorphMetadataProvider,

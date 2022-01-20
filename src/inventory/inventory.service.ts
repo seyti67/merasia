@@ -54,4 +54,22 @@ export class InventoryService {
 		}
 		return inventory.items;
 	}
+
+	async getEquipped(
+		id: number,
+	): Promise<{ wand: number | string; spells: Array<[number, number]> }> {
+		const inventory = await this.inventoryRepository.findOne({ id });
+		if (!inventory) {
+			throw new Error('Inventory not found');
+		}
+		const spells = inventory.equippedSpells;
+		const wand = inventory.wand || '';
+		return { wand, spells };
+	}
+
+	async reset() {
+		await this.inventoryRepository.removeAndFlush(
+			await this.inventoryRepository.findAll(),
+		);
+	}
 }

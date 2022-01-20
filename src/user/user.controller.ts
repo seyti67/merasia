@@ -26,6 +26,7 @@ export class UserController {
 	@Get('reset')
 	async reset() {
 		await this.userService.reset();
+		await this.inventoryService.reset();
 		return 'ok';
 	}
 

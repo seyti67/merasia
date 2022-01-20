@@ -12,10 +12,19 @@ export class Inventory {
 	@PrimaryKey({ type: BigIntType, unique: true })
 	id!: number;
 
-	// items
+	// items by id associated with amount
 	@Property({ type: JsonType })
-	items = {};
+	items: { [key: number | string]: number } = {};
 
+	// spells by id associated with level of spell
+	@Property({ type: JsonType })
+	spells: { [key: number]: number } = {};
+
+	// equipped items
 	@Property()
-	slotsNb = 100;
+	wand?: string;
+
+	// equipped spells
+	@Property({ type: JsonType })
+	equippedSpells?: Array<[number, number]> = [[0, 1]];
 }

@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 import { NestFactory } from '@nestjs/core';
-import { NestExpressApplication } from '@nestjs/platform-express';
+import type { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';

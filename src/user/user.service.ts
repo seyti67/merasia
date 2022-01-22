@@ -4,7 +4,8 @@ import { Injectable } from '@nestjs/common';
 import { User } from './user.entity';
 import fetch from 'node-fetch';
 import { InventoryService } from '../inventory/inventory.service';
-import { Player } from 'src/game/player.service';
+import type { Player } from 'src/game/player.service';
+import { getWand } from 'src/game/wands';
 
 @Injectable()
 export class UserService {
@@ -92,13 +93,17 @@ export class UserService {
 	async getStats(id: number): Promise<Player> {
 		const user = await this.userRepository.findOne({ id });
 		const equipped = await this.inventoryService.getEquipped(id);
+		if (!equipped.wand) {
+			equipped.wand = '31-6$0';
+		}
 		return {
 			id,
+			level: user.level,
 			maxHealth: user.health,
 			health: user.health,
 			maxMana: user.mana,
 			mana: user.mana,
-			wand: equipped.wand,
+			wand: getWand(equipped.wand),
 			spells: equipped.spells,
 		};
 	}

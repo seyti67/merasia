@@ -20,7 +20,7 @@ export class Inventory {
 	@Property({ type: JsonType })
 	spells: { [key: number]: number } = {};
 
-	// equipped items
+	// equipped wand in format staff-stone$seed
 	@Property()
 	wand?: string;
 

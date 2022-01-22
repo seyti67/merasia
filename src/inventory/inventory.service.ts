@@ -57,7 +57,7 @@ export class InventoryService {
 
 	async getEquipped(
 		id: number,
-	): Promise<{ wand: number | string; spells: Array<[number, number]> }> {
+	): Promise<{ wand: string | string; spells: Array<[number, number]> }> {
 		const inventory = await this.inventoryRepository.findOne({ id });
 		if (!inventory) {
 			throw new Error('Inventory not found');

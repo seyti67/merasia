@@ -1,5 +1,6 @@
 .env
 /temp
+/.rollup.cache
 
 # compiled output
 /dist

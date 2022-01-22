@@ -1,13 +1,16 @@
+import type { Type } from './basics';
+
 export interface MonsterData {
 	health: number;
 	damage: number;
-	type: 'normal' | 'fire' | 'water' | 'grass' | 'dark' | 'light';
+	type: Type;
 	level: number;
 	loot?: number[];
 }
 
 export interface Monster {
 	name: monsterName;
+	type: Type;
 	maxHealth: number;
 	health: number;
 	damage: number;
@@ -17,31 +20,31 @@ export interface Monster {
 export const monsters /* : { [key: string]: MonsterData } */ = {
 	'grass spirit': {
 		health: 30,
-		damage: 2,
+		damage: 4,
 		type: 'grass',
 		level: 5,
 	},
 	'water spirit': {
 		health: 25,
-		damage: 3,
+		damage: 5,
 		type: 'water',
 		level: 5,
 	},
 	'fire spirit': {
 		health: 15,
-		damage: 5,
+		damage: 7,
 		type: 'fire',
 		level: 6,
 	},
 	'dark spirit': {
-		health: 35,
-		damage: 5,
+		health: 40,
+		damage: 9,
 		type: 'dark',
 		level: 8,
 	},
 	'light spirit': {
-		health: 20,
-		damage: 8,
+		health: 35,
+		damage: 12,
 		type: 'light',
 		level: 9,
 	},
@@ -58,6 +61,7 @@ export function getMob(mob: monsterName): Monster {
 	const monster = monsters[mob];
 	return {
 		name: mob,
+		type: monster.type as Type,
 		health: Math.round(monster.health * multipliers[0]),
 		maxHealth: Math.round(monster.health * multipliers[0]),
 		damage: Math.round(monster.damage * multipliers[1]),

@@ -1,12 +1,129 @@
-export default {
-	0: {
-		name: 'stick',
-		description: "A stick. It's not very useful. But it's a stick.",
-		type: 'wand',
+import type { WandStats } from './wands';
+import type { Type } from './basics';
+
+type Category = 'item' | 'staff' | 'stone';
+type Rarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+
+interface Item {
+	name: string;
+	description: string;
+	category: Category;
+	rarity: Rarity;
+	stats?: WandStats;
+	type?: Type;
+}
+
+export const items: { [key: number]: Item } = {
+	// 1-5 stone fragments
+	// 6-30 elemental stones
+	31: {
+		name: 'weak staff',
+		description: "I mean... It's wood, but it's still a staff.",
+		category: 'staff',
 		rarity: 'common',
-		statistics: {
-			mana: 5,
+		stats: {
 			damage: 1,
+			mana: 0,
+			manaRegen: 2,
+			health: 0,
+			healthRegen: 2,
+		},
+	},
+	32: {
+		name: 'staff',
+		description: "A simple staff. Not powerful, but it's better than nothing.",
+		category: 'staff',
+		rarity: 'uncommon',
+		stats: {
+			damage: 1.3,
+			mana: 10,
+			manaRegen: 5,
+			health: 10,
+			healthRegen: 5,
+		},
+	},
+	33: {
+		name: 'great staff',
+		description: "A staff that's better than a normal staff.",
+		category: 'staff',
+		rarity: 'rare',
+		stats: {
+			damage: 1.5,
+			mana: 30,
+			manaRegen: 15,
+			health: 30,
+			healthRegen: 15,
+		},
+	},
+	34: {
+		name: 'fancy staff',
+		description: 'Woah, this staff is quite powerful!',
+		category: 'staff',
+		rarity: 'epic',
+		stats: {
+			damage: 2,
+			mana: 50,
+			manaRegen: 25,
+			health: 50,
+			healthRegen: 25,
+		},
+	},
+	35: {
+		name: 'legendary staff',
+		description: "This staff is the best staff you've ever seen!",
+		category: 'staff',
+		rarity: 'legendary',
+		stats: {
+			damage: 2.5,
+			mana: 100,
+			manaRegen: 50,
+			health: 100,
+			healthRegen: 50,
 		},
 	},
 };
+
+const elements = ['grass', 'water', 'fire', 'dark', 'light'];
+elements.forEach((element: Type, i) => {
+	items[1 + i] = {
+		name: `${element} stone`,
+		description: `A stone fragment from the ${element} element.`,
+		category: 'item',
+		rarity: 'common',
+	};
+	items[6 + i] = {
+		name: `ugly ${element} stone`,
+		description: `A stone from the ${element} element. It's ugly and weak.`,
+		category: 'stone',
+		rarity: 'common',
+		type: element,
+	};
+	items[11 + i] = {
+		name: `${element} stone`,
+		description: `A stone from the ${element} element. It's quite basic.`,
+		category: 'stone',
+		rarity: 'uncommon',
+		type: element,
+	};
+	items[16 + i] = {
+		name: `fancy ${element} stone`,
+		description: `A stone from the ${element} element. It's very fancy.`,
+		category: 'stone',
+		rarity: 'rare',
+		type: element,
+	};
+	items[21 + i] = {
+		name: `wonderful ${element} stone`,
+		description: `A stone from the ${element} element. It's very wonderful.`,
+		category: 'stone',
+		rarity: 'epic',
+		type: element,
+	};
+	items[26 + i] = {
+		name: `Perfect ${element} stone`,
+		description: `A stone from the ${element} element. It's just perfect and very powerful.`,
+		category: 'stone',
+		rarity: 'legendary',
+		type: element,
+	};
+});

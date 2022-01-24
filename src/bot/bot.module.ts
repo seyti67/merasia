@@ -1,8 +1,9 @@
+import { logger } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
 import { Client } from 'discord.js';
 import { GameModule } from 'src/game/game.module';
 import { Interactions } from './interactions';
-//import './commands';
+// import './commands';
 
 @Module({
 	imports: [GameModule],
@@ -13,7 +14,7 @@ export class BotModule {
 		const client = new Client({ intents: 0 });
 
 		client.once('ready', () => {
-			console.log('The bot is ready!');
+			logger.log('Bot is ready');
 		});
 
 		client.on('interactionCreate', (interaction) => {

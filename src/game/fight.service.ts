@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import {
+	ColorResolvable,
+	MessageActionRow,
+	MessageButton,
+	MessageEmbed,
+} from 'discord.js';
 import { getSpellDamage, Hit, randomizeDamage } from './fights';
-import type { Monster } from './monsters';
-import { Player, PlayerService } from './player.service';
-import { Spell, spells } from './spells';
-import type { WandStats } from './wands';
+import type { Monster } from './data/monsters';
+import { Spell, spells } from './data/spells';
+import { Player, UserService } from 'src/user/user.service';
 
 interface Fight {
 	monster: Monster;
@@ -12,8 +16,8 @@ interface Fight {
 	messages: string[];
 	fighting: boolean;
 	xp?: number;
-	lost?: boolean;
 	loot?: number[];
+	color?: ColorResolvable;
 }
 
 const pointsPerLine = 10;
@@ -42,11 +46,11 @@ function manaBar(mana: number, maxMana: number) {
 
 @Injectable()
 export class FightService {
-	constructor(private playerService: PlayerService) {}
+	constructor(private userService: UserService) {}
 	private fights: { [key: number]: Fight } = {};
 
 	async addFight(monster: Monster, playerId: number) {
-		const playerStats: Player = await this.playerService.getPlayer(playerId);
+		const playerStats: Player = await this.userService.getStats(playerId);
 		this.fights[playerId] = {
 			monster,
 			player: playerStats,
@@ -60,12 +64,35 @@ export class FightService {
 		this.fights[playerId].fighting = true;
 	}
 
-	end(playerId: number) {
+	async win(playerId: number) {
 		const fight = this.fights[playerId];
 		const { monster, player } = fight;
 		fight.fighting = false;
-		const xp = (((0.5 + Math.random()) * monster.level) / player.level) * 100;
-		fight.xp = Math.round(xp);
+		fight.color = '#3b9b41';
+		const xp = Math.round(
+			(((0.5 + Math.random()) * monster.level) / player.level) * 10,
+		);
+		fight.xp = xp;
+		const levelGain = await this.userService.addXp(playerId, xp);
+		fight.messages = ['You won!', `You gained ${xp} xp`];
+		if (levelGain) {
+			fight.messages.push(
+				levelGain < 2
+					? 'You gained a level!'
+					: `You gained ${levelGain} levels!`,
+			);
+		}
+	}
+
+	lose(playerId: number) {
+		const fight = this.fights[playerId];
+		fight.fighting = false;
+		fight.color = '#d6332a';
+		fight.messages = [
+			'You lost!',
+			'You now have negative health and must wait.',
+		];
+		fight.player.health = -fight.player.maxHealth;
 	}
 
 	remove(playerId: number) {
@@ -81,6 +108,58 @@ export class FightService {
 		return this.fights[playerId] && this.fights[playerId].fighting;
 	}
 
+	async round(playerId: number) {
+		const fight = this.fights[playerId];
+		const { monster, player } = fight;
+
+		if (monster.health <= 0) {
+			monster.health = 0;
+			await this.win(playerId);
+			return;
+		}
+
+		const monsterHit = randomizeDamage(monster.damage);
+		fight.messages.push(`${monster.name} dealt ${monsterHit.damage} damage`);
+		player.health -= monsterHit.damage;
+		player.health = Math.max(0, player.health);
+		if (player.health <= 0) {
+			fight.messages.push('Lmao you died');
+			this.lose(playerId);
+		}
+
+		this.userService.setPoints(playerId, {
+			health: player.health,
+			mana: player.mana,
+		});
+	}
+
+	castSpell(slot: number, playerId: number) {
+		const fight = this.fights[playerId];
+		if (!fight || !fight.fighting) return;
+		const player = fight.player;
+		const spellData = player.spells[slot];
+		const spell: Spell = spells[spellData[0]];
+
+		player.mana -= spell.cost;
+		const hit: Hit = getSpellDamage(
+			spellData[0],
+			spellData[1],
+			player.wand,
+			fight.monster,
+		);
+		fight.messages = [
+			`You've dealt ${hit.damage} damage${
+				hit.critical ? ', critical hit!' : '.'
+			}`,
+		];
+		fight.monster.health -= hit.damage;
+	}
+
+	skip(playerId: number) {
+		const fight = this.fights[playerId];
+		fight.messages = [`You skipped a round`];
+	}
+
 	display(playerId: number): {
 		embeds: MessageEmbed[];
 		components: MessageActionRow[];
@@ -90,9 +169,9 @@ export class FightService {
 
 		if (!fight.fighting) {
 			const embed = new MessageEmbed()
-				.setTitle(`${monster.name} defeated!`)
-				.setDescription(`You looted ${fight.xp} xp.`)
-				.setColor('#00aa00');
+				.setTitle('The fight is over')
+				.setDescription(fight.messages.join('\n'))
+				.setColor(fight.color || '#252525');
 			this.remove(playerId);
 			return { embeds: [embed], components: [] };
 		}
@@ -107,7 +186,7 @@ export class FightService {
 				${healthBar(player.health, player.maxHealth)}
 				${manaBar(player.mana, player.maxMana)}`,
 			)
-			.setColor('#252525');
+			.setColor(fight.color || '#252525');
 		embed.thumbnail = {
 			url:
 				'https://merasia.duianaft.repl.co/monsters/' +
@@ -136,69 +215,5 @@ export class FightService {
 				.setStyle('SECONDARY'),
 		);
 		return { embeds: [embed], components: [row] };
-	}
-
-	round(playerId: number) {
-		const fight = this.fights[playerId];
-		const { monster, player } = fight;
-
-		if (monster.health <= 0) {
-			monster.health = 0;
-			fight.messages = [`You killed ${fight.monster.name}`];
-			this.end(playerId);
-			return;
-		}
-
-		const stats: WandStats = player.wand.stats;
-		const monsterHit = randomizeDamage(monster.damage);
-		fight.messages.push(`${monster.name} dealt ${monsterHit.damage} damage`);
-		player.health -= monsterHit.damage;
-		if (player.health <= 0) {
-			fight.messages.push('Lmao you died');
-			fight.lost = true;
-			this.end(playerId);
-			return;
-		}
-
-		const hRegen = Math.min(
-			stats.healthRegen,
-			player.maxHealth - player.health,
-		);
-		player.health += hRegen;
-
-		const mRegen = Math.min(stats.manaRegen, player.maxMana - player.mana);
-		player.mana += mRegen;
-
-		fight.messages.push(
-			`Regeneration: ${hRegen ? `+${hRegen} pv` : ''} ${
-				mRegen ? `+${mRegen} mp` : ''
-			}`,
-		);
-	}
-
-	castSpell(slot: number, playerId: number) {
-		const fight = this.fights[playerId];
-		const player = fight.player;
-		const spellData = player.spells[slot];
-		const spell: Spell = spells[spellData[0]];
-
-		player.mana -= spell.cost;
-		const hit: Hit = getSpellDamage(
-			spellData[0],
-			spellData[1],
-			player.wand,
-			fight.monster,
-		);
-		fight.messages = [
-			`You've dealt ${hit.damage} damage${
-				hit.critical ? ', critical hit!' : '.'
-			}`,
-		];
-		fight.monster.health -= hit.damage;
-	}
-
-	skip(playerId: number) {
-		const fight = this.fights[playerId];
-		fight.messages = [`You skipped a round`];
 	}
 }

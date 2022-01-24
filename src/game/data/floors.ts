@@ -1,6 +1,5 @@
 /* all the data about floors from 1 to 10 */
 import { getMob, monsterName } from './monsters';
-
 interface Floor {
 	name: string;
 	mobs: { [k in monsterName]: number };

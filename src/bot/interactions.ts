@@ -4,7 +4,7 @@ import {
 	MessageActionRow,
 	MessageButton,
 } from 'discord.js';
-import { getMobAtFloor } from 'src/game/floors';
+import { getMobAtFloor } from 'src/game/data/floors';
 import { FightService } from 'src/game/fight.service';
 import { Injectable } from '@nestjs/common';
 
@@ -58,7 +58,7 @@ export class Interactions {
 			await interaction.update({ content: 'You coward', components: [] });
 		} else if (customId === 'skip') {
 			this.fightService.skip(playerId);
-			this.fightService.round(playerId);
+			await this.fightService.round(playerId);
 
 			const display = this.fightService.display(playerId);
 			await interaction.update(display);
@@ -66,7 +66,7 @@ export class Interactions {
 			const spellIndex = Number(customId.split('-')[1]);
 			this.fightService.castSpell(spellIndex, playerId);
 
-			this.fightService.round(playerId);
+			await this.fightService.round(playerId);
 
 			const display = this.fightService.display(playerId);
 			await interaction.update(display);

@@ -1,4 +1,4 @@
-import type { Options } from '@mikro-orm/core';
+import { Options } from '@mikro-orm/core';
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import { join } from 'path';
 

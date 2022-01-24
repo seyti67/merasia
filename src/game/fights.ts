@@ -1,7 +1,7 @@
-import { weaknesses } from './basics';
-import type { Monster } from './monsters';
-import { Spell, spells } from './spells';
-import type { Wand } from './wands';
+import { weaknesses } from './data/basics';
+import type { Monster } from './data/monsters';
+import { Spell, spells } from './data/spells';
+import type { Wand } from './data/wands';
 
 export interface Hit {
 	damage: number;

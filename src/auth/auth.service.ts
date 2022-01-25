@@ -16,7 +16,7 @@ export class AuthService {
 				client_secret: process.env.CLIENT_SECRET,
 				code,
 				grant_type: 'authorization_code',
-				redirect_uri: process.env.URL + 'auth/login',
+				redirect_uri: process.env.BASE_URL + 'auth/login',
 				scope: 'identify',
 			}),
 			headers: {

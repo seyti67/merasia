@@ -6,8 +6,8 @@ import {
 	MessageEmbed,
 } from 'discord.js';
 import { getSpellDamage, Hit, randomizeDamage } from './fights';
-import type { Monster } from './data/monsters';
-import { Spell, spells } from './data/spells';
+import type { Monster } from '../data/monsters';
+import { Spell, spells } from '../data/spells';
 import { Player, UserService } from 'src/user/user.service';
 
 interface Fight {
@@ -21,53 +21,21 @@ interface Fight {
 }
 
 const pointsPerLine = 10;
-function healthBar(health: number, maxHealth: number) {
+function bar(value: number, max: number, fragments: string[]) {
 	let bar = '';
-	const fullHearts = Math.floor((health / maxHealth) * pointsPerLine);
-	bar += '❤'.repeat(fullHearts);
-	const fragments = Math.round(((health / maxHealth) % 1) * 4);
-	bar += fragments ? fragments : '';
-	bar += '🤍'.repeat(pointsPerLine - fullHearts);
-
-	bar += ` ${health} pv`;
-	return bar;
-}
-function manaBar(mana: number, maxMana: number) {
-	let bar = '';
-	const fullMana = Math.floor((mana / maxMana) * pointsPerLine);
-	bar += '🔵'.repeat(fullMana);
-	const fragments = Math.round(((mana / maxMana) % 1) * 4);
-	bar += fragments ? fragments : '';
-	bar += '⚪'.repeat(pointsPerLine - fullMana);
-
-	bar += ` ${mana} mp`;
-	return bar;
-}
-function bar(
-	value: number, max: number, fragments: string[],
-) {
-	let bar = '';
-    const part = value / max * pointsPerLine;
+	const part = (value / max) * pointsPerLine;
 	const full = Math.floor(part);
 	bar += fragments[fragments.length - 1].repeat(full);
 
-	let remains = Math.floor((part % 1) * (fragments.length - 1) + 1) % pointsPerLine;
-    if (value === max) remains = 0
+	let remains =
+		Math.floor((part % 1) * (fragments.length - 1) + 1) % pointsPerLine;
+	if (value === max) remains = 0;
 	if (remains !== 0) bar += fragments[remains - 1];
 
-    console.log(pointsPerLine - full - (remains !== 0 ? 1:0))
-	bar += fragments[0].repeat(Math.max(0, pointsPerLine - full - (remains !== 0 ? 1:0)));
-	return bar;
-}
-function bar(value: number, max: number, emojis: {
-	full: string, empty: string, fragments: string[],
-}) {
-	let bar = '';
-	const full = Math.floor((value / max) * pointsPerLine);
-	bar += emojis.full.repeat(full);
-	const fragments = Math.round(((value / max) % 1) * 4);
-	bar += emojis.fragments[fragments];
-	bar += emojis.empty.repeat(pointsPerLine - full);
+	console.log(pointsPerLine - full - (remains !== 0 ? 1 : 0));
+	bar += fragments[0].repeat(
+		Math.max(0, pointsPerLine - full - (remains !== 0 ? 1 : 0)),
+	);
 	return bar;
 }
 
@@ -129,6 +97,17 @@ export class FightService {
 	getFighters(playerId: number) {
 		const { monster, player } = this.fights[playerId];
 		return { monster, player };
+	}
+
+	async getPlayer(playerId: number): Promise<Player> {
+		const fight = this.fights[playerId];
+		let player: Player;
+		if (!fight) {
+			player = await this.userService.getStats(playerId);
+		} else {
+			player = fight.player;
+		}
+		return player;
 	}
 
 	exists(playerId: number) {
@@ -206,12 +185,12 @@ export class FightService {
 		const embed = new MessageEmbed()
 			.setTitle(`${monster.name} lvl ${monster.level}`)
 			.setDescription(
-				`${healthBar(monster.health, monster.maxHealth)}
+				`${bar(monster.health, monster.maxHealth, ['🤍', '💛', '🧡', '❤️'])}
 
 				${fight.messages.join('\n')}
 
-				${healthBar(player.health, player.maxHealth)}
-				${manaBar(player.mana, player.maxMana)}`,
+				${bar(player.health, player.maxHealth, ['🤍', '💛', '🧡', '❤️'])}
+				${bar(player.mana, player.maxMana, ['⬜', '🟪', '🟦'])}`,
 			)
 			.setColor(fight.color || '#252525');
 		embed.thumbnail = {

@@ -3,20 +3,22 @@ import {
 	CommandInteraction,
 	MessageActionRow,
 	MessageButton,
+	MessageEmbed,
 } from 'discord.js';
 import { getMobAtFloor } from 'src/game/data/floors';
-import { FightService } from 'src/game/fight.service';
+import { FightService } from 'src/game/fights/fight.service';
 import { Injectable } from '@nestjs/common';
+import { info } from './images';
 
 @Injectable()
 export class Interactions {
 	constructor(private fightService: FightService) {}
 
 	async HandleCommand(interaction: CommandInteraction) {
-		const { commandName } = interaction;
-		if (commandName === 'hunt') {
-			const playerId = BigInt(interaction.user.id) as unknown as number;
+		const { commandName, user } = interaction;
+		const playerId = BigInt(user.id) as unknown as number;
 
+		if (commandName === 'hunt') {
 			if (this.fightService.exists(playerId)) {
 				interaction.reply('You are already in a fight');
 				return;
@@ -39,7 +41,24 @@ export class Interactions {
 			});
 
 			await this.fightService.addFight(monster, playerId);
-			return;
+		} else if (commandName === 'info') {
+			const player = await this.fightService.getPlayer(playerId);
+			const embed = new MessageEmbed().setImage(
+				process.env.BASE_URL + '/fight/' + player.id,
+			);
+			await interaction.reply({ embeds: [embed] });
+		} else if (commandName === 'link') {
+			await interaction.reply({
+				content: 'Come here to manage your things!',
+				components: [
+					new MessageActionRow().addComponents(
+						new MessageButton()
+							.setLabel('Merasia')
+							.setStyle('LINK')
+							.setURL(process.env.BASE_URL),
+					),
+				],
+			});
 		} else {
 			interaction.reply(`Unknown command: ${commandName}`);
 			return;

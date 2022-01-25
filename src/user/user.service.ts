@@ -16,6 +16,7 @@ export interface Player {
 	maxHealth: number;
 	mana: number;
 	maxMana: number;
+	xp: number;
 	wand?: Wand;
 	spells: Array<[number, number]>;
 }
@@ -194,6 +195,7 @@ export class UserService {
 		return {
 			id,
 			level: user.level,
+			xp: user.xp,
 			maxHealth: user.maxHealth,
 			health: player ? player.health : user.maxHealth,
 			maxMana: user.maxMana,

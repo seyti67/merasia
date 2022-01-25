@@ -43,6 +43,33 @@ function manaBar(mana: number, maxMana: number) {
 	bar += ` ${mana} mp`;
 	return bar;
 }
+function bar(
+	value: number, max: number, fragments: string[],
+) {
+	let bar = '';
+    const part = value / max * pointsPerLine;
+	const full = Math.floor(part);
+	bar += fragments[fragments.length - 1].repeat(full);
+
+	let remains = Math.floor((part % 1) * (fragments.length - 1) + 1) % pointsPerLine;
+    if (value === max) remains = 0
+	if (remains !== 0) bar += fragments[remains - 1];
+
+    console.log(pointsPerLine - full - (remains !== 0 ? 1:0))
+	bar += fragments[0].repeat(Math.max(0, pointsPerLine - full - (remains !== 0 ? 1:0)));
+	return bar;
+}
+function bar(value: number, max: number, emojis: {
+	full: string, empty: string, fragments: string[],
+}) {
+	let bar = '';
+	const full = Math.floor((value / max) * pointsPerLine);
+	bar += emojis.full.repeat(full);
+	const fragments = Math.round(((value / max) % 1) * 4);
+	bar += emojis.fragments[fragments];
+	bar += emojis.empty.repeat(pointsPerLine - full);
+	return bar;
+}
 
 @Injectable()
 export class FightService {

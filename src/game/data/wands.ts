@@ -1,6 +1,5 @@
 import type { Type } from './basics';
 import { items } from './items';
-
 export interface WandStats {
 	damage: number;
 	mana: number;
@@ -31,7 +30,6 @@ function GaussianFrom(seed: number) {
 export function getWand(id: string): Wand {
 	//split on '-' and '$'
 	const [staff, stone, seed] = id.split(/[-\$]/).map(Number);
-
 	const baseStats: WandStats = items[staff].stats;
 	// random stats generated with seed
 	// stats are in a range of 70% - 160%

@@ -23,7 +23,8 @@ export class User {
 	upgradePoints = 0;
 
 	@Property()
-	health = 100;
+	maxHealth = 100;
+
 	@Property()
-	mana = 100;
+	maxMana = 100;
 }

@@ -63,10 +63,20 @@ export class InventoryService {
 			throw new Error('Inventory not found');
 		}
 		const spells = inventory.equippedSpells;
-		const wand = inventory.wand || '';
+		const wand = inventory.wand || '31-6$0';
 		return { wand, spells };
 	}
 
+	async getWand(id: number): Promise<string> {
+		const inventory = await this.inventoryRepository.findOne(
+			{ id },
+			{ fields: ['wand'] },
+		);
+		if (!inventory) {
+			throw new Error('Inventory not found');
+		}
+		return inventory.wand || '31-6$0';
+	}
 	async reset() {
 		await this.inventoryRepository.removeAndFlush(
 			await this.inventoryRepository.findAll(),

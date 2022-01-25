@@ -7,14 +7,13 @@ import { UserService } from './user.service';
 @UseGuards(AuthGuard)
 export class UserController {
 	constructor(
-		private userService: UserService,
+		public userService: UserService,
 		private inventoryService: InventoryService,
 	) {}
 
 	@Get()
 	async personal(@Req() req: any) {
-		console.log(req.user);
-		return await this.userService.getUser(req.user);
+		return await this.userService.getUserData(req.user);
 	}
 
 	@Get('all')

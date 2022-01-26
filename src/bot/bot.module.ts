@@ -1,3 +1,5 @@
+import * as dotenv from 'dotenv';
+dotenv.config({ path: '.env' });
 import { logger } from '@mikro-orm/nestjs';
 import { Module } from '@nestjs/common';
 import { Client } from 'discord.js';

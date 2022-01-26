@@ -183,14 +183,11 @@ export class FightService {
 		}
 
 		const embed = new MessageEmbed()
-			.setTitle(`${monster.name} lvl ${monster.level}`)
+			.setTitle(`${monster.name} level ${monster.level}`)
 			.setDescription(
-				`${bar(monster.health, monster.maxHealth, ['🤍', '💛', '🧡', '❤️'])}
-
-				${fight.messages.join('\n')}
-
-				${bar(player.health, player.maxHealth, ['🤍', '💛', '🧡', '❤️'])}
-				${bar(player.mana, player.maxMana, ['⬜', '🟪', '🟦'])}`,
+				`${bar(monster.health, monster.maxHealth, ['🤍', '💛', '🧡', '❤️'])}`
+				+ `\n\n${bar(player.health, player.maxHealth, ['🤍', '💛', '🧡', '❤️'])}`
+				+ `\n${bar(player.mana, player.maxMana, ['⬜', '🟪', '🟦'])}`,
 			)
 			.setColor(fight.color || '#252525');
 		embed.thumbnail = {
@@ -198,8 +195,6 @@ export class FightService {
 				'https://merasia.duianaft.repl.co/monsters/' +
 				monster.name.replace(' ', '_') +
 				'.png',
-			width: 256,
-			height: 256,
 		};
 
 		const row = new MessageActionRow();

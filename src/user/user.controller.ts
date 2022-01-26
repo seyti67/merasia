@@ -14,8 +14,8 @@ export class UserController {
 	) {}
 
 	@Get()
-	async personal(@Req() req: any) {
-		return await this.playerService.getUserData(req.user);
+	async personal(@Req() req: any): Promise<any> {
+		return this.playerService.getUserData(req.user);
 	}
 
 	@Get('all')

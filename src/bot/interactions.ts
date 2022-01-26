@@ -8,7 +8,6 @@ import {
 import { getMobAtFloor } from 'src/game/data/floors';
 import { FightService } from 'src/game/fights/fight.service';
 import { Injectable } from '@nestjs/common';
-import { info } from './images';
 
 @Injectable()
 export class Interactions {

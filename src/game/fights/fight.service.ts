@@ -8,7 +8,7 @@ import {
 import { getSpellDamage, Hit, randomizeDamage } from './fights';
 import type { Monster } from '../data/monsters';
 import { Spell, spells } from '../data/spells';
-import { Player, UserService } from 'src/user/user.service';
+import { Player, PlayerService } from 'src/user/player.service';
 
 interface Fight {
 	monster: Monster;
@@ -41,11 +41,11 @@ function bar(value: number, max: number, fragments: string[]) {
 
 @Injectable()
 export class FightService {
-	constructor(private userService: UserService) {}
+	constructor(private playerService: PlayerService) {}
 	private fights: { [key: number]: Fight } = {};
 
 	async addFight(monster: Monster, playerId: number) {
-		const playerStats: Player = await this.userService.getStats(playerId);
+		const playerStats: Player = await this.playerService.getStats(playerId);
 		this.fights[playerId] = {
 			monster,
 			player: playerStats,
@@ -68,7 +68,7 @@ export class FightService {
 			(((0.5 + Math.random()) * monster.level) / player.level) * 10,
 		);
 		fight.xp = xp;
-		const levelGain = await this.userService.addXp(playerId, xp);
+		const levelGain = await this.playerService.addXp(playerId, xp);
 		fight.messages = ['You won!', `You gained ${xp} xp`];
 		if (levelGain) {
 			fight.messages.push(
@@ -103,7 +103,7 @@ export class FightService {
 		const fight = this.fights[playerId];
 		let player: Player;
 		if (!fight) {
-			player = await this.userService.getStats(playerId);
+			player = await this.playerService.getStats(playerId);
 		} else {
 			player = fight.player;
 		}
@@ -133,7 +133,7 @@ export class FightService {
 			this.lose(playerId);
 		}
 
-		this.userService.setPoints(playerId, {
+		this.playerService.setPoints(playerId, {
 			health: player.health,
 			mana: player.mana,
 		});
@@ -183,14 +183,11 @@ export class FightService {
 		}
 
 		const embed = new MessageEmbed()
-			.setTitle(`${monster.name} lvl ${monster.level}`)
+			.setTitle(`${monster.name} level ${monster.level}`)
 			.setDescription(
-				`${bar(monster.health, monster.maxHealth, ['🤍', '💛', '🧡', '❤️'])}
-
-				${fight.messages.join('\n')}
-
-				${bar(player.health, player.maxHealth, ['🤍', '💛', '🧡', '❤️'])}
-				${bar(player.mana, player.maxMana, ['⬜', '🟪', '🟦'])}`,
+				`${bar(monster.health, monster.maxHealth, ['🤍', '💛', '🧡', '❤️'])}`
+				+ `\n\n${bar(player.health, player.maxHealth, ['🤍', '💛', '🧡', '❤️'])}`
+				+ `\n${bar(player.mana, player.maxMana, ['⬜', '🟪', '🟦'])}`,
 			)
 			.setColor(fight.color || '#252525');
 		embed.thumbnail = {
@@ -198,8 +195,6 @@ export class FightService {
 				'https://merasia.duianaft.repl.co/monsters/' +
 				monster.name.replace(' ', '_') +
 				'.png',
-			width: 256,
-			height: 256,
 		};
 
 		const row = new MessageActionRow();

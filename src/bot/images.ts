@@ -1,5 +1,5 @@
 import { xpUntilNext } from 'src/game/utils';
-import { Player } from 'src/user/user.service';
+import { Player } from 'src/user/player.service';
 
 export const info = (player: Player) => {
 	const percentHealth = (600 * player.health) / player.maxHealth;

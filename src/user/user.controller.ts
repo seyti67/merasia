@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { InventoryService } from 'src/inventory/inventory.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { PlayerService } from './player.service';
 import { UserService } from './user.service';
 
 @Controller('api/me')
@@ -9,11 +10,12 @@ export class UserController {
 	constructor(
 		public userService: UserService,
 		private inventoryService: InventoryService,
+		private playerService: PlayerService,
 	) {}
 
 	@Get()
 	async personal(@Req() req: any) {
-		return await this.userService.getUserData(req.user);
+		return await this.playerService.getUserData(req.user);
 	}
 
 	@Get('all')

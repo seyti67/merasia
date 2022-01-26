@@ -1,4 +1,6 @@
 .env
+server.cert
+server.key
 /temp
 /.rollup.cache
 

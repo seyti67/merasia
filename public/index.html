@@ -1,31 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
-	<script src="tools.js"></script>
-</head>
-<body>
-	<div id="info">
-		Hello!
-	</div>
-	<a id="login" style="display: none;" href="https://discord.com/api/oauth2/authorize?client_id=738322654385406003&redirect_uri=http%3A%2F%2F127.0.0.1%2Fauth%2Flogin&response_type=code&scope=identify">
-		Identify Yourself
-	</a>
-	<script>
-		window.onload = () => {
-			const cookies = readCookies();
-			
-			if (!cookies.token) {
-				const randomString = generateRandomString(21);
-				writeCookie('oauthState', randomString);
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width,initial-scale=1'>
 
-				document.getElementById('login').href += `&state=${btoa(randomString)}`;
-				return document.getElementById('login').style.display = 'block';
-			}
-		};
-	</script>
+	<title>Svelte app</title>
+
+	<link rel='icon' type='image/png' href='/favicon.png'>
+	<link rel='stylesheet' href='/global.css'>
+	<link rel='stylesheet' href='/build/bundle.css'>
+
+	<script defer src='/build/bundle.js'></script>
+</head>
+
+<body>
 </body>
 </html>

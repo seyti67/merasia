@@ -8,15 +8,8 @@ import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import * as fs from 'fs';
 
-const httpsOptions = {
-	key: fs.readFileSync('server.key', 'utf-8'),
-	cert: fs.readFileSync('server.cert', 'utf-8'),
-};
-
 async function bootstrap() {
-	const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-		httpsOptions,
-	});
+	const app = await NestFactory.create<NestExpressApplication>(AppModule);
 	app.useStaticAssets(join(__dirname, '../public'));
 	app.use(compression());
 	app.use(cookieParser());

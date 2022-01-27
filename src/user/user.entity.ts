@@ -14,7 +14,7 @@ export class User {
 
 	/* game properties */
 	@Property()
-	level = 0;
+	level = 1;
 
 	@Property()
 	xp = 0;

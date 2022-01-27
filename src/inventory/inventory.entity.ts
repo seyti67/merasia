@@ -26,5 +26,5 @@ export class Inventory {
 
 	// equipped spells
 	@Property({ type: JsonType })
-	equippedSpells?: Array<[number, number]> = [[0, 1]];
+	equippedSpells?: Array<[number, number]> = [[0, 1]]; // basic spell
 }

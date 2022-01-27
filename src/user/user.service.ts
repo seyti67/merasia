@@ -4,8 +4,6 @@ import { Injectable } from '@nestjs/common';
 import { User } from './user.entity';
 import fetch from 'node-fetch';
 import { InventoryService } from '../inventory/inventory.service';
-import { getWand, Wand } from 'src/game/data/wands';
-import { xpUntilNext } from 'src/game/utils';
 
 @Injectable()
 export class UserService {
@@ -65,8 +63,6 @@ export class UserService {
 		this.userRepository.flush();
 		return user;
 	}
-
-	
 
 	async getUsers(): Promise<User[]> {
 		return this.userRepository.findAll();

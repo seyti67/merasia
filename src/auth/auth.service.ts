@@ -24,6 +24,7 @@ export class AuthService {
 			},
 		});
 		const data = await oauthResult.json();
+		console.log(data);
 
 		const userResult = await fetch('https://discord.com/api/users/@me', {
 			headers: {

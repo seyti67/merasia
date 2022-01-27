@@ -6,7 +6,6 @@ import type { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
-import * as fs from 'fs';
 
 async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -14,6 +13,7 @@ async function bootstrap() {
 	app.use(compression());
 	app.use(cookieParser());
 	app.enableCors();
-	await app.listen(process.env.PORT || 3000);
+	await app.listen(process.env.PORT || 8080);
+	console.log(`Server running on port ${process.env.PORT || 8080}`);
 }
 bootstrap();

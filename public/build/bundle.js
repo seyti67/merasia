@@ -1237,7 +1237,7 @@ var app = (function () {
     			if (!src_url_equal(img.src, img_src_value = "https://cdn.discordapp.com/avatars/" + /*personal*/ ctx[0].id + "/" + /*personal*/ ctx[0].avatar + ".png?size=128")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "avatar");
     			attr_dev(img, "class", "svelte-17a7rdm");
-    			add_location(img, file$4, 45, 2, 1600);
+    			add_location(img, file$4, 45, 2, 1603);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -1316,11 +1316,11 @@ var app = (function () {
     			path = svg_element("path");
     			circle = svg_element("circle");
     			attr_dev(path, "d", "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2");
-    			add_location(path, file$4, 42, 213, 1489);
+    			add_location(path, file$4, 42, 213, 1492);
     			attr_dev(circle, "cx", "12");
     			attr_dev(circle, "cy", "7");
     			attr_dev(circle, "r", "4");
-    			add_location(circle, file$4, 42, 266, 1542);
+    			add_location(circle, file$4, 42, 266, 1545);
     			attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
     			attr_dev(svg, "width", "24");
     			attr_dev(svg, "height", "24");
@@ -1331,10 +1331,10 @@ var app = (function () {
     			attr_dev(svg, "stroke-linecap", "round");
     			attr_dev(svg, "stroke-linejoin", "round");
     			attr_dev(svg, "class", "feather feather-user svelte-17a7rdm");
-    			add_location(svg, file$4, 42, 3, 1279);
+    			add_location(svg, file$4, 42, 3, 1282);
     			attr_dev(a, "href", /*href*/ ctx[1]);
     			attr_dev(a, "class", "svelte-17a7rdm");
-    			add_location(a, file$4, 41, 2, 1257);
+    			add_location(a, file$4, 41, 2, 1260);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, a, anchor);
@@ -1455,15 +1455,15 @@ var app = (function () {
     			div4 = element("div");
     			create_component(bar2.$$.fragment);
     			attr_dev(div0, "class", "username svelte-17a7rdm");
-    			add_location(div0, file$4, 47, 3, 1725);
+    			add_location(div0, file$4, 47, 3, 1728);
     			attr_dev(div1, "class", "level svelte-17a7rdm");
-    			add_location(div1, file$4, 48, 3, 1855);
+    			add_location(div1, file$4, 48, 3, 1858);
     			attr_dev(div2, "class", "bar svelte-17a7rdm");
-    			add_location(div2, file$4, 49, 3, 1960);
+    			add_location(div2, file$4, 49, 3, 1963);
     			attr_dev(div3, "class", "bar svelte-17a7rdm");
-    			add_location(div3, file$4, 54, 3, 2161);
+    			add_location(div3, file$4, 54, 3, 2164);
     			attr_dev(div4, "class", "bar svelte-17a7rdm");
-    			add_location(div4, file$4, 59, 3, 2358);
+    			add_location(div4, file$4, 59, 3, 2361);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div0, anchor);
@@ -1712,7 +1712,7 @@ var app = (function () {
     			attr_dev(div, "class", "login svelte-17a7rdm");
     			toggle_class(div, "opened", /*opened*/ ctx[2]);
     			toggle_class(div, "dead", /*dead*/ ctx[3]);
-    			add_location(div, file$4, 39, 0, 1155);
+    			add_location(div, file$4, 39, 0, 1158);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1813,7 +1813,7 @@ var app = (function () {
     	(async () => {
     		$$invalidate(0, personal = await api.get('me'));
     		if (personal.id) return;
-    		$$invalidate(1, href = 'https://discord.com/api/oauth2/authorize?client_id=738322654385406003&redirect_uri=http%3A%2F%2F127.0.0.1%2Fauth%2Flogin&response_type=code&scope=identify');
+    		$$invalidate(1, href = 'https://discord.com/api/oauth2/authorize?client_id=738322654385406003&redirect_uri=https%3A%2F%2Fmerasia.xyz%2Fauth%2Flogin&response_type=code&scope=identify');
     		const randomString = generateRandomString(21);
     		writeCookie('oauthState', randomString);
     		$$invalidate(1, href += `&state=${btoa(randomString)}`);

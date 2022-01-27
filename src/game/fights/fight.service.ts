@@ -9,6 +9,7 @@ import { getSpellDamage, Hit, randomizeDamage } from './fights';
 import type { Monster } from '../data/monsters';
 import { Spell, spells } from '../data/spells';
 import { Player, PlayerService } from 'src/user/player.service';
+import { hearts, manas } from '../data/emojis';
 
 interface Fight {
 	monster: Monster;
@@ -32,7 +33,6 @@ function bar(value: number, max: number, fragments: string[]) {
 	if (value === max) remains = 0;
 	if (remains !== 0) bar += fragments[remains - 1];
 
-	console.log(pointsPerLine - full - (remains !== 0 ? 1 : 0));
 	bar += fragments[0].repeat(
 		Math.max(0, pointsPerLine - full - (remains !== 0 ? 1 : 0)),
 	);
@@ -182,12 +182,14 @@ export class FightService {
 			return { embeds: [embed], components: [] };
 		}
 
+		console.log(player.mana, player.maxMana);
 		const embed = new MessageEmbed()
 			.setTitle(`${monster.name} level ${monster.level}`)
 			.setDescription(
-				`${bar(monster.health, monster.maxHealth, ['🤍', '💛', '🧡', '❤️'])}`
-				+ `\n\n${bar(player.health, player.maxHealth, ['🤍', '💛', '🧡', '❤️'])}`
-				+ `\n${bar(player.mana, player.maxMana, ['⬜', '🟪', '🟦'])}`,
+				`${bar(monster.health, monster.maxHealth, hearts)}\n\n` +
+					fight.messages.join('\n') +
+					`\n\n${bar(player.health, player.maxHealth, hearts)}` +
+					`\n${bar(player.mana, player.maxMana, manas)}`,
 			)
 			.setColor(fight.color || '#252525');
 		embed.thumbnail = {

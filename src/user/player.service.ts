@@ -1,10 +1,11 @@
-import { InjectRepository } from "@mikro-orm/nestjs";
-import { EntityRepository } from "@mikro-orm/postgresql";
-import { Injectable } from "@nestjs/common";
-import { getWand, Wand } from "src/game/data/wands";
-import { xpUntilNext } from "src/game/utils";
-import { InventoryService } from "src/inventory/inventory.service";
-import { User } from "./user.entity";
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/postgresql';
+import { Injectable } from '@nestjs/common';
+import { getWand, Wand } from 'src/game/data/wands';
+import { xpUntilNext } from 'src/game/utils';
+import { InventoryService } from 'src/inventory/inventory.service';
+import { User } from './user.entity';
+import fetch from 'node-fetch';
 
 export interface Player {
 	id: number;
@@ -19,16 +20,16 @@ export interface Player {
 }
 
 interface Identity {
-    id: number,
-    username: string,
-    avatar: string, 
-    discriminator: string,
-    level: number,
-    xp: number,
-    health: number,
-    maxHealth: number,
-    mana: number,
-    maxMana: number,
+	id: number;
+	username: string;
+	avatar: string;
+	discriminator: string;
+	level: number;
+	xp: number;
+	health: number;
+	maxHealth: number;
+	mana: number;
+	maxMana: number;
 }
 
 const playersPoints: {
@@ -51,13 +52,13 @@ const min = Math.min;
 
 @Injectable()
 export class PlayerService {
-    constructor(
-        @InjectRepository(User)
+	constructor(
+		@InjectRepository(User)
 		private userRepository: EntityRepository<User>,
-        private readonly inventoryService: InventoryService
-    ) {}
+		private readonly inventoryService: InventoryService,
+	) {}
 
-    async getBasicPlayer(id: number): Promise<BasicPlayer> {
+	async getBasicPlayer(id: number): Promise<BasicPlayer> {
 		const user = await this.userRepository.findOne({ id });
 		return {
 			id: user.id,
@@ -82,7 +83,7 @@ export class PlayerService {
 		return {
 			id: userData.id,
 			username: userData.username,
-			avatar: userData.avatar, 
+			avatar: userData.avatar,
 			discriminator: userData.discriminator,
 			level: user.level,
 			xp: user.xp,
@@ -164,8 +165,8 @@ export class PlayerService {
 			spells: equipped.spells,
 		};
 	}
-    
-    async addXp(id: number, xp: number): Promise<number> {
+
+	async addXp(id: number, xp: number): Promise<number> {
 		const user = await this.userRepository.findOne({ id });
 		let xpToAdd = xp;
 		let levelGain = 0;

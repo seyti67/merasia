@@ -15,6 +15,7 @@ export class BotModule {
 	constructor(private interactions: Interactions) {
 		const client = new Client({ intents: 0 });
 
+		console.log('Starting bot...');
 		client.once('ready', () => {
 			logger.log('Bot is ready');
 		});

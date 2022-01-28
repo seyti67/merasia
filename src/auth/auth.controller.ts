@@ -17,6 +17,8 @@ export class AuthController {
 			return;
 		}
 		const token = await this.authService.auth(code);
+		if (!token) return 'unable to authenticate';
+
 		res.cookie('token', token, { maxAge: 604800000 });
 		res.cookie('oauthState', '', { maxAge: 0 });
 		return res.redirect('/');

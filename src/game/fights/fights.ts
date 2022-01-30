@@ -16,8 +16,8 @@ export function getSpellDamage(
 ): Hit {
 	const spell: Spell = spells[spellId];
 	let damage = spell.damage;
-	damage *= 1 + level / 5;
 	damage *= wand.stats.damage;
+	damage *= 1 + level / 5;
 	damage *= wand.type === spell.type ? 1.2 : 1;
 	if (weaknesses[target.type] === spell.type) {
 		damage *= 1.5;

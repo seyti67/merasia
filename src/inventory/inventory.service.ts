@@ -1,7 +1,11 @@
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
+import { getTree } from 'src/game/data/trees';
 import { Inventory } from './inventory.entity';
+
+const treeStages = 4;
+const updateInterval = 60 * 60;
 
 @Injectable()
 export class InventoryService {
@@ -16,17 +20,13 @@ export class InventoryService {
 		return;
 	}
 
-	async addItem(id: number, item: number, amount: number) {
-		const inventory = await this.inventoryRepository.findOne({ id });
-		if (!inventory) {
-			throw new Error('Inventory not found');
-		}
+	async addItem(inventory: Inventory, item: number, amount: number) {
 		if (!inventory.items[item]) {
 			inventory.items[item] = amount;
 		} else {
 			inventory.items[item] += amount;
 		}
-		this.inventoryRepository.flush();
+		await this.inventoryRepository.flush();
 	}
 
 	async removeItem(id: number, item: number, amount: number): Promise<boolean> {
@@ -63,7 +63,7 @@ export class InventoryService {
 			throw new Error('Inventory not found');
 		}
 		const spells = inventory.equippedSpells;
-		const wand = inventory.wand || '31-6$0';
+		const wand = inventory.wand;
 		return { wand, spells };
 	}
 
@@ -75,8 +75,45 @@ export class InventoryService {
 		if (!inventory) {
 			throw new Error('Inventory not found');
 		}
-		return inventory.wand || '31-6$0';
+		return inventory.wand;
 	}
+
+	async update(inventory: Inventory) {
+		if (!inventory.lastUpdate)
+			inventory.lastUpdate = Math.round(Date.now() / 1000);
+		// difference in time in half-hours
+		const diff = (Date.now() / 1000 - inventory.lastUpdate) / updateInterval;
+		if (diff > 1) {
+			inventory.lastUpdate = Math.round(
+				Date.now() / 1000 - (diff % 1) * updateInterval,
+			);
+			inventory.tree = Math.min(inventory.tree + Math.floor(diff), treeStages);
+		}
+		this.inventoryRepository.flush();
+	}
+
+	async getEverything(id: number): Promise<Inventory> {
+		const inventory = await this.inventoryRepository.findOne({ id });
+		if (!inventory) {
+			throw new Error('Inventory not found');
+		}
+		this.update(inventory);
+		return inventory;
+	}
+
+	async collectTree(id: number) {
+		const inventory = await this.inventoryRepository.findOne({ id });
+		if (!inventory) {
+			throw new Error('Inventory not found');
+		}
+		if (inventory.tree !== treeStages) return;
+
+		inventory.tree = 0;
+		this.inventoryRepository.flush();
+
+		return getTree(inventory.farmLevel);
+	}
+
 	async reset() {
 		await this.inventoryRepository.removeAndFlush(
 			await this.inventoryRepository.findAll(),

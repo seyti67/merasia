@@ -182,19 +182,22 @@ export class FightService {
 			return { embeds: [embed], components: [] };
 		}
 
-		console.log(player.mana, player.maxMana);
 		const embed = new MessageEmbed()
 			.setTitle(`${monster.name} level ${monster.level}`)
 			.setDescription(
-				`${bar(monster.health, monster.maxHealth, hearts)}\n\n` +
+				`${bar(monster.health, monster.maxHealth, hearts)} ${
+					monster.health
+				} pv\n\n` +
 					fight.messages.join('\n') +
-					`\n\n${bar(player.health, player.maxHealth, hearts)}` +
-					`\n${bar(player.mana, player.maxMana, manas)}`,
+					`\n\n${bar(player.health, player.maxHealth, hearts)} ${
+						player.health
+					} pv` +
+					`\n${bar(player.mana, player.maxMana, manas)} ${player.mana} mp`,
 			)
 			.setColor(fight.color || '#252525');
 		embed.thumbnail = {
 			url:
-				'https://merasia.duianaft.repl.co/monsters/' +
+				'https://merasia.xyz/images/monsters/' +
 				monster.name.replace(' ', '_') +
 				'.png',
 		};

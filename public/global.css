@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+
 * {
 	margin: 0;
 	padding: 0;
@@ -9,9 +11,11 @@ html, body {
 }
 
 :root {
-	--bg-color: #1d2142;
-	--bg-contrast: #4952a7;
-	--border-color: #3969a7;
+	--bg-color: rgb(39, 41, 52);
+	--bg-contrast: #1f1f1f;
+	--contrast-color: #393bbe;
+	--border-color: #5a5a5a;
+	--strong-border: #1f4792;
 	--font-color: rgb(223, 223, 223);
 }
 

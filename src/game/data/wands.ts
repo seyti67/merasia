@@ -28,6 +28,17 @@ function GaussianFrom(seed: number) {
 }
 
 export function getWand(id: string): Wand {
+	if (!id)
+		return {
+			type: 'normal',
+			stats: {
+				damage: 1,
+				mana: 0,
+				manaRegen: 1,
+				health: 0,
+				healthRegen: 1,
+			},
+		};
 	//split on '-' and '$'
 	const [staff, stone, seed] = id.split(/[-\$]/).map(Number);
 	const baseStats: WandStats = items[staff].stats;

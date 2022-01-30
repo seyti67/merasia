@@ -28,16 +28,16 @@ export const monsters /* : { [key: string]: MonsterData } */ = {
 		health: 25,
 		damage: 5,
 		type: 'water',
-		level: 5,
-	},
-	'fire spirit': {
-		health: 15,
-		damage: 7,
-		type: 'fire',
 		level: 6,
 	},
+	'fire spirit': {
+		health: 25,
+		damage: 7,
+		type: 'fire',
+		level: 7,
+	},
 	'dark spirit': {
-		health: 40,
+		health: 45,
 		damage: 9,
 		type: 'dark',
 		level: 8,

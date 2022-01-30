@@ -16,7 +16,38 @@ interface Item {
 export const items: { [key: number]: Item } = {
 	// 1-5 stone fragments
 	// 6-30 elemental stones
+	// --- logs --- //
 	31: {
+		name: 'Populus log',
+		description: 'This log is the base wood for weak staffs.',
+		category: 'item',
+		rarity: 'common',
+	},
+	32: {
+		name: 'Oak log',
+		description: 'This log is the base wood for strong staffs.',
+		category: 'item',
+		rarity: 'uncommon',
+	},
+	33: {
+		name: 'Bloody dogwood log',
+		description: 'This log is the base wood for powerful staffs.',
+		category: 'item',
+		rarity: 'rare',
+	},
+	34: {
+		name: 'Brazil wood log',
+		description: 'This log is the base wood for fancy staffs.',
+		category: 'item',
+		rarity: 'epic',
+	},
+	35: {
+		name: 'Snakewood log',
+		description: 'This log is the base wood for legendary staffs.',
+		category: 'item',
+		rarity: 'legendary',
+	},
+	36: {
 		name: 'weak staff',
 		description: "I mean... It's wood, but it's still a staff.",
 		category: 'staff',
@@ -29,7 +60,7 @@ export const items: { [key: number]: Item } = {
 			healthRegen: 2,
 		},
 	},
-	32: {
+	37: {
 		name: 'staff',
 		description: "A simple staff. Not powerful, but it's better than nothing.",
 		category: 'staff',
@@ -42,7 +73,7 @@ export const items: { [key: number]: Item } = {
 			healthRegen: 5,
 		},
 	},
-	33: {
+	38: {
 		name: 'great staff',
 		description: "A staff that's better than a normal staff.",
 		category: 'staff',
@@ -55,7 +86,7 @@ export const items: { [key: number]: Item } = {
 			healthRegen: 15,
 		},
 	},
-	34: {
+	39: {
 		name: 'fancy staff',
 		description: 'Woah, this staff is quite powerful!',
 		category: 'staff',
@@ -68,7 +99,7 @@ export const items: { [key: number]: Item } = {
 			healthRegen: 25,
 		},
 	},
-	35: {
+	40: {
 		name: 'legendary staff',
 		description: "This staff is the best staff you've ever seen!",
 		category: 'staff',

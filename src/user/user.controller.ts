@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { InventoryService } from 'src/inventory/inventory.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { PlayerService } from './player.service';
@@ -30,13 +30,19 @@ export class UserController {
 		await this.inventoryService.reset();
 		return 'ok';
 	}
+}
 
-	@Get('inventory')
+@Controller('api/inventory')
+@UseGuards(AuthGuard)
+export class InventoryController {
+	constructor(private inventoryService: InventoryService) {}
+
+	@Get('')
 	async getInventory(@Req() req: any) {
-		return await this.inventoryService.getItems(req.user);
+		return await this.inventoryService.getEverything(req.user);
 	}
 
-	@Get('inventory/add/:item/:amount')
+	@Get('add/:item/:amount')
 	async addItem(
 		@Req() req: any,
 		@Param('item') item: number,
@@ -46,7 +52,7 @@ export class UserController {
 		return await this.inventoryService.getItems(req.user);
 	}
 
-	@Get('inventory/remove/:item/:amount')
+	@Get('remove/:item/:amount')
 	async removeItem(
 		@Req() req: any,
 		@Param('item') item: number,
@@ -57,5 +63,11 @@ export class UserController {
 			Number(item),
 			Number(amount),
 		);
+	}
+
+	@Get('collect-tree')
+	async collectTree(@Req() req: any) {
+		const tree = await this.inventoryService.collectTree(req.user);
+		return tree;
 	}
 }

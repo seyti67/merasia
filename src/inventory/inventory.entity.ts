@@ -27,4 +27,14 @@ export class Inventory {
 	// equipped spells
 	@Property({ type: JsonType })
 	equippedSpells?: Array<[number, number]> = [[0, 1]]; // basic spell
+
+	// farms
+	@Property()
+	tree = 0; // tree stage
+
+	@Property()
+	farmLevel = 1; // level of farm
+
+	@Property()
+	lastUpdate = Math.round(Date.now() / 1000); // last time the user updated their inventory (in seconds)
 }

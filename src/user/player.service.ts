@@ -26,6 +26,7 @@ interface Identity {
 	discriminator: string;
 	level: number;
 	xp: number;
+	upgradePoints: number;
 	health: number;
 	maxHealth: number;
 	mana: number;
@@ -87,6 +88,7 @@ export class PlayerService {
 			discriminator: userData.discriminator,
 			level: user.level,
 			xp: user.xp,
+			upgradePoints: user.upgradePoints,
 			health: player ? player.health : user.maxHealth,
 			maxHealth: user.maxHealth,
 			mana: player ? player.mana : user.maxMana,

@@ -43,7 +43,7 @@ export class Interactions {
 		} else if (commandName === 'info') {
 			const player = await this.fightService.getPlayer(playerId);
 			const embed = new MessageEmbed().setImage(
-				process.env.BASE_URL + '/fight/' + player.id,
+				process.env.BASE_URL + 'fight/' + player.id,
 			);
 			await interaction.reply({ embeds: [embed] });
 		} else if (commandName === 'link') {
